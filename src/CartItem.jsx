@@ -8,29 +8,66 @@ const CartItem = ({ onContinueShopping }) => {
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
+
   const calculateTotalAmount = () => {
- 
+    let total = 0;
+
+    // Loop through the cart items and calculate the total
+    cartItems.forEach((item) => {
+      const cost = parseFloat(item.cost.substring(1)); // Convert cost from "$10.00" to 10.00
+      total += cost * item.quantity; // Add the cost * quantity to total
+    });
+
+    return total;
   };
 
   const handleContinueShopping = (e) => {
-   
+    // Prevent default behavior if needed (e.g., for form submission)
+    e.preventDefault();
+
+    // Call the onContinueShopping function passed from the parent component
+    if (onContinueShopping) {
+      onContinueShopping(e);
+    }
   };
 
-
-
-  const handleIncrement = (item) => {
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
   };
 
-  const handleDecrement = (item) => {
-   
+   // Increment quantity of a plant
+   const handleIncrement = (name) => {
+    const item = cartItems.find(item => item.name === name);
+    if (item) {
+      dispatch(updateQuantity({ name, quantity: item.quantity + 1 }));
+    }
   };
 
-  const handleRemove = (item) => {
+  // Decrement quantity of a plant
+  const handleDecrement = (name) => {
+    const item = cartItems.find(item => item.name === name);
+    if (item) {
+      if (item.quantity > 1) {
+        dispatch(updateQuantity({ name, quantity: item.quantity - 1 }));
+      } else {
+        // If quantity would drop to 0, remove the item from the cart
+        dispatch(removeItem(name));
+      }
+    }
   };
 
-  // Calculate total cost based on quantity for an item
+  // Function to remove an item from the cart
+  const handleRemove = (name) => {
+    dispatch(removeItem(name)); // Dispatch removeItem to remove the item from the cart
+  };
+
+  // Calculate the total cost for an individual item (quantity * unit price)
   const calculateTotalCost = (item) => {
+    const unitPrice = parseFloat(item.cost.substring(1)); // Extract numeric value from "$xx.xx"
+    return unitPrice * item.quantity; // Multiply unit price with quantity
   };
+
+
 
   return (
     <div className="cart-container">
