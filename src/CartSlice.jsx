@@ -1,3 +1,4 @@
+
 import { createSlice } from '@reduxjs/toolkit';
 
 export const CartSlice = createSlice({
@@ -7,7 +8,7 @@ export const CartSlice = createSlice({
   },
   reducers: {
     addItem: (state, action) => {
-
+        console.log("Action received in addItem:", action.payload);
         const { name, image, cost } = action.payload;
         const existingItem = state.items.find(item => item.name === name);
         if (existingItem) {
@@ -15,6 +16,7 @@ export const CartSlice = createSlice({
         } else {
             state.items.push({ name, image, cost, quantity: 1 });
         }
+        console.log("Updated cart state:", JSON.stringify(state.items, null, 2)); // Log updated cart state
     
     },
 
@@ -32,7 +34,7 @@ export const CartSlice = createSlice({
     },
 
   },
-  
+
 });
 
 export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
